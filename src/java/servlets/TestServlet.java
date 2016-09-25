@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -41,33 +42,53 @@ public class TestServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            
+            ArrayList<String> historyList;
+            HttpSession sess = request.getSession(true);
+            if (sess.isNew()) {
+                historyList = new ArrayList<>();
+            } else {
+                historyList = (ArrayList<String>) request.getSession().getAttribute("history");
+            }
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<link rel=\"stylesheet\" href=\""+ request.getContextPath()+"\\css\\style.css\">");
-            out.println("<title>Servlet TestServlet</title>");            
+            out.println("<link rel=\"stylesheet\" href=\"" + request.getContextPath() + "\\css\\style.css\">");
+            out.println("<title>Servlet TestServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet TestServlet at " + request.getContextPath() + "</h1>");  
+            out.println("<h1>Servlet TestServlet at " + request.getContextPath() + "</h1>");
             out.println("<div class=\"nova\">");
-            Map<String,String>hm = new HashMap<>();
+            Map<String, String> hm = new HashMap<>();
             Enumeration<String> en = request.getParameterNames();
-            while (en.hasMoreElements()){
+            while (en.hasMoreElements()) {
                 String element = en.nextElement();
-                hm.put(element, (String)request.getParameter(element));
+                hm.put(element, (String) request.getParameter(element));
             }
+
+            String s;
+
             try {
-                out.printf("<pre> %s </pre>", Calculation.calculator(hm));
+                s = Calculation.calculator(hm);
+                out.printf("<pre> %s </pre>", s);
+                out.println("</div>");
+                out.println("<hr>");
+                if (!historyList.isEmpty())
+                for (String x : historyList) {
+                    out.printf("<p class=\"nova\">%s</p>", x);
+                }
+
+                historyList.add(s);
+                request.getSession().setAttribute("history", historyList);
+
             } catch (Exception ex) {
-                out.printf("<pre>%s</pre>",ex.toString());
+                out.printf("<pre>%s</pre>", ex.toString());
+            } finally {
+                out.println("</body>");
+                out.println("</html>");
             }
-            out.println("</div>");
-            out.println("</body>");
-            out.println("</html>");
         }
     }
-    
+
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
