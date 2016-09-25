@@ -5,6 +5,7 @@
  */
 package servlets;
 
+import Calculator.Calculation;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -18,7 +19,8 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -39,13 +41,6 @@ public class TestServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            Map<String,String>hm = new ConcurrentHashMap<>();
-            Enumeration<String> en = request.getAttributeNames();
-            while (en.hasMoreElements()){
-                String element = en.nextElement();
-                hm.put(element, (String)request.getAttribute(element));
-            }
             
             out.println("<!DOCTYPE html>");
             out.println("<html>");
@@ -56,8 +51,16 @@ public class TestServlet extends HttpServlet {
             out.println("<body>");
             out.println("<h1>Servlet TestServlet at " + request.getContextPath() + "</h1>");  
             out.println("<div class=\"nova\">");
-            for (Map.Entry<String,String>pair: hm.entrySet()){
-                out.printf("Parameter - %s, value - %s",pair.getKey(),pair.getValue());
+            Map<String,String>hm = new HashMap<>();
+            Enumeration<String> en = request.getParameterNames();
+            while (en.hasMoreElements()){
+                String element = en.nextElement();
+                hm.put(element, (String)request.getParameter(element));
+            }
+            try {
+                out.printf("<pre> %s </pre>", Calculation.calculator(hm));
+            } catch (Exception ex) {
+                out.printf("<pre>%s</pre>",ex.toString());
             }
             out.println("</div>");
             out.println("</body>");
