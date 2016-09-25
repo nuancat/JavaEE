@@ -15,6 +15,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  *
@@ -36,8 +40,12 @@ public class TestServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            File file = new File("images");
-            String []files = file.list();
+            Map<String,String>hm = new ConcurrentHashMap<>();
+            Enumeration<String> en = request.getAttributeNames();
+            while (en.hasMoreElements()){
+                String element = en.nextElement();
+                hm.put(element, (String)request.getAttribute(element));
+            }
             
             out.println("<!DOCTYPE html>");
             out.println("<html>");
@@ -46,15 +54,17 @@ public class TestServlet extends HttpServlet {
             out.println("<title>Servlet TestServlet</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet TestServlet at " + request.getContextPath() + "</h1>");       
-            for (int i = 0; i < files.length; i++) {
-                out.println("<img src=\""+request.getContextPath()+"/images/"+ files[i]+"\"/>");
+            out.println("<h1>Servlet TestServlet at " + request.getContextPath() + "</h1>");  
+            out.println("<div class=\"nova\">");
+            for (Map.Entry<String,String>pair: hm.entrySet()){
+                out.printf("Parameter - %s, value - %s",pair.getKey(),pair.getValue());
             }
+            out.println("</div>");
             out.println("</body>");
             out.println("</html>");
         }
     }
-
+    
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.

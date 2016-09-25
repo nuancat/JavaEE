@@ -6,7 +6,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>TestServlet</servlet-name>
-        <url-pattern>/TestServlet</url-pattern>
+        <url-pattern>/</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
@@ -15,6 +15,6 @@
     </session-config>
     <error-page>
         <error-code>404</error-code>
-        <location>/WEB-INF/ERRORS/404.html</location>
+        <location>/ERRORS/You've ripped a hole in the fabric of the internet. Love, Chris from CSS-Tricks.html</location>
     </error-page>
 </web-app>

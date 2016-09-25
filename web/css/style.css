@@ -11,3 +11,7 @@ and open the template in the editor.
 img{
     border-radius: 6px;
 }
+.nova{
+    text-align: center;
+    border-left: blueviolet;
+}
