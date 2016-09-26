@@ -6,21 +6,16 @@
 package servlets;
 
 import Calculator.Calculation;
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Collections;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -72,9 +67,10 @@ public class TestServlet extends HttpServlet {
                 out.printf("<pre> %s </pre>", s);
                 out.println("</div>");
                 out.println("<hr>");
-                if (!historyList.isEmpty())
-                for (String x : historyList) {
-                    out.printf("<p class=\"nova\">%s</p>", x);
+                if (!historyList.isEmpty()) {
+                    for (String x : historyList) {
+                        out.printf("<p class=\"nova\">%s</p>", x);
+                    }
                 }
 
                 historyList.add(s);
