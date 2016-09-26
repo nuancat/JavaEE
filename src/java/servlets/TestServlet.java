@@ -77,6 +77,7 @@ public class TestServlet extends HttpServlet {
                 request.getSession().setAttribute("history", historyList);
 
             } catch (Exception ex) {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST);
                 out.printf("<pre>%s</pre>", ex.toString());
             } finally {
                 out.println("</body>");
