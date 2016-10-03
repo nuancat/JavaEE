@@ -5,6 +5,7 @@
  */
 package servlets;
 
+import Calculator.CalcSession;
 import Calculator.Calculation;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -37,12 +38,10 @@ public class TestServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            ArrayList<String> historyList;
-            HttpSession sess = request.getSession(true);
-            if (sess.isNew()) {
-                historyList = new ArrayList<>();
-            } else {
-                historyList = (ArrayList<String>) request.getSession().getAttribute("history");
+            String sessID = request.getSession().getId();
+            HashMap<String,ArrayList<String>>operations = (HashMap<String, ArrayList<String>>) getServletContext().getAttribute("operations");
+            if (operations==null){
+                operations = new HashMap<>();
             }
             out.println("<!DOCTYPE html>");
             out.println("<html>");
@@ -51,7 +50,7 @@ public class TestServlet extends HttpServlet {
             out.println("<title>Servlet TestServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet TestServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Calculator at " + request.getContextPath() + "</h1>");
             out.println("<div class=\"nova\">");
             Map<String, String> hm = new HashMap<>();
             Enumeration<String> en = request.getParameterNames();
@@ -67,19 +66,41 @@ public class TestServlet extends HttpServlet {
                 out.printf("<pre> %s </pre>", s);
                 out.println("</div>");
                 out.println("<hr>");
-                if (!historyList.isEmpty()) {
+                out.println("<div class=\"block\">");
+                out.println("<p>THIS SESSION</p>");
+                ArrayList<String>historyList = new ArrayList<>();
+                if (operations.containsKey(sessID)) {                    
+                    historyList = operations.get(sessID);
                     for (String x : historyList) {
                         out.printf("<p class=\"nova\">%s</p>", x);
                     }
-                }
-
+                }    
+                out.println("</div>");
                 historyList.add(s);
-                request.getSession().setAttribute("history", historyList);
-
+                out.println("<div class=\"block\">");
+               operations.put(sessID, historyList);
+               getServletContext().setAttribute("operations", operations);
+               // out.println("<hr>");
+                out.println("<p>ALL SESSIONS</p>");
+                for (Map.Entry<String,ArrayList<String>>entry: operations.entrySet()){                  
+                    if (!entry.getKey().equals(sessID)){
+                        out.printf("<h4>%s</h4>",entry.getKey());
+                        ArrayList<String>list = entry.getValue();
+                        if (!list.isEmpty())
+                            for (String y:list){
+                                out.printf("<p>%s</p>", y);
+                        }
+                    }
+                }
+                out.println("</div>");
             } catch (Exception ex) {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST);
                 out.printf("<pre>%s</pre>", ex.toString());
-            } finally {
+            } 
+            
+            
+            
+            finally {
                 out.println("</body>");
                 out.println("</html>");
             }

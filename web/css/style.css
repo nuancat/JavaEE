@@ -15,3 +15,8 @@ img{
     text-align: center;
     border-left: blueviolet;
 }
+.block{
+    float: left;
+    padding: 25px;
+    align: center;
+}

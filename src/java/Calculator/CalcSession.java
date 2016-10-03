@@ -15,7 +15,27 @@ import java.util.ArrayList;
 public class CalcSession implements Serializable{
     String sessionID;
     ArrayList<String>alist;
-    
+
+    public String getSessionID() {
+        return sessionID;
+    }
+
+    public void setSessionID(String sessionID) {
+        this.sessionID = sessionID;
+    }
+
+    public ArrayList<String> getAlist() {
+        return alist;
+    }
+
+    public void setAlist(ArrayList<String> alist) {
+        this.alist = alist;
+    }
+
+    public CalcSession(String sessionID, ArrayList<String> alist) {
+        this.sessionID = sessionID;
+        this.alist = alist;
+    }
     
     
 }
