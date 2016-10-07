@@ -4,9 +4,17 @@
         <servlet-name>main</servlet-name>
         <servlet-class>servlets.TestServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>TimeAndCookies</servlet-name>
+        <servlet-class>servlets.TimeAndCookies</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>main</servlet-name>
         <url-pattern>/web</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>TimeAndCookies</servlet-name>
+        <url-pattern>/tac</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
